@@ -11,20 +11,29 @@ _The functionalities are divided using MoSCoW analysis_
 #### Must have
 ---
 **Workout generation** - Ability to generate a workout of certain type by using the inputs of weight, strength and goals.
+
 **Strategy adjustment** - Ability to adjust the workout stategy by set and reps or time.
-**Workout builder** - Ability to build a workout from scratch.
+
+**Workout builder** - Ability to build a workout of certain sphere, such as cardio or resistance.
+
 **User Interface (UI)** - An UI through which the user can interact with the system.
+
 #### Should have
 ---
 **Excercise database** - A database attached to the application with various excercises in order to facilitate easier workout creation.
+
 **Customization** - Ability to customize already existing workouts by adding or removing excercises.
+
 #### Could have
 ---
 **Motivational features** - Integration of motivational features such as achievement badges, inspirational quotes, or progress milestones to keep users motivated.
+
 **Online availability** - Ability for the application to run online, not just locally.
+
 #### Won't have
 ---
 **Advanced analytics** - In-depth analytics and data visualization features for analyzing workout trends and patterns.
+
 **Post-development support** - The application will not be updated after its development is finished.
 
 ### Design Patterns Used

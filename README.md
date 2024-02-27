@@ -29,10 +29,10 @@ _The functionalities are divided using MoSCoW analysis_
 
 ### Design Patterns Used
 ##### Factory Method Pattern
-**Purpose**: To generate different types of workout routines based on user preferences, such as strength, weight, or goals. This pattern solves the problem of creating the default workout routine difficulty dynamically based on user input.
+**Purpose**: To generate different types of workout routines based on user preferences, such as cardio or resistance. This pattern solves the problem of creating the default workout routine dynamically based on user input.
 ##### Strategy Pattern
 **Purpose**: To implement different strategies for progress tracking, such as tracking by sets and reps, tracking by time, or tracking by intensity. This pattern solves the problem of accommodating various progress tracking methods while keeping the application flexible and maintainable.
 ##### Builder Pattern
-**Purpose**: To construct and customize workout routines step by step, allowing users to specify certain exercises and thier parameters. This pattern solves the problem of creating complex workout routines in a structured and cohesive manner while providing in-depth control to the user.
+**Purpose**: To construct and customize workout routines by difficulty, allowing users to specify certain excercise difficulty based on thier input. This pattern solves the problem of creating personalized workout routines in a structured and cohesive manner while providing in-depth control to the user.
 ### Class Diagram
 _To do_

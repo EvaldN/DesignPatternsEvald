@@ -10,11 +10,11 @@ The Gym Workout Application is an app designed for users to receive a workout pl
 _The functionalities are divided using MoSCoW analysis_
 #### Must have
 ---
-**Workout generation** - Ability to generate a workout of certain type by using the inputs of weight, strength and goals.
+**Workout builder** - Ability to generate a workout of certain type by using the inputs of weight, strength and goals.
 
 **Strategy adjustment** - Ability to adjust the workout stategy by set and reps or time.
 
-**Workout builder** - Ability to build a workout of certain sphere, such as cardio or resistance.
+**Workout generation** - Ability to build a workout of certain sphere, such as cardio or resistance.
 
 **User Interface (UI)** - An UI through which the user can interact with the system.
 

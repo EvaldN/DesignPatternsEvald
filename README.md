@@ -44,4 +44,4 @@ _The functionalities are divided using MoSCoW analysis_
 ##### Singleton Pattern
 **Purpose**: The Singleton Pattern's purpose in the application is to manage the retrieval of motivational quotes from an API. This pattern ensures that there is only one instance of the class responsible for fetching quotes, maintaining consistency and efficiency in quote retrieval across the application. It also ensures only one instance of the quote is present, this way preventing the application having to interact with the API excessively.
 ### Class Diagram
-_To do_
+![Class diagram](./ClassDiagram0.jpg)

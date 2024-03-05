@@ -26,7 +26,7 @@ _The functionalities are divided using MoSCoW analysis_
 
 #### Could have
 ---
-**Motivational features** - Integration of motivational features such as achievement badges, inspirational quotes, or progress milestones to keep users motivated.
+**Achievement** - Integration of motivational features such as achievement badges, inspirational quotes, or progress milestones to keep users motivated.
 
 **Online availability** - Ability for the application to run online, not just locally.
 

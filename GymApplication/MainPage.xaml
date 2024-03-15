@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GymApplication.MainPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="DeleteButtonStyle" TargetType="Button">
+                <Setter Property="IsVisible" Value="True" />
+                <Style.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Name}" Value="Unassigned">
+                        <Setter Property="IsVisible" Value="False" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout>
+        <Label Text="Profiles and Workouts" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10"/>
+        <ListView x:Name="ProfileListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <Label Text="{Binding Name}" FontAttributes="Bold"/>
+                            <Label Text="Workouts:"/>
+                            <ListView ItemsSource="{Binding Workouts}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}" />
+                                                <Label Text="{Binding Name}" />
+                                            </StackLayout>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button Text="Delete Profile" Clicked="OnDeleteProfileClicked" 
+                                    CommandParameter="{Binding Name}" 
+                                    Style="{StaticResource DeleteButtonStyle}" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Button Text="Create Profile" Clicked="OnCreateProfileClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
+        <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
+        <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
+    </StackLayout>
+</ContentPage>

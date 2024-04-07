@@ -1,18 +1,33 @@
-﻿using Microsoft.Maui.Controls;
+﻿using MauiPopup;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
+using System;
+using System.Text;
 
 namespace GymApplication
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, IObservable 
     {
-        private List<Profile> profiles = new List<Profile>();
+        public List<Profile> profiles = new List<Profile>();
+
+        private List<IObserver> observers = new List<IObserver>();
 
         public MainPage()
         {
             InitializeComponent();
             InitializeData(); // Load default data, aka, the unassigned """profile"""
             PopulateProfiles();
-        }
+            ImportWorkoutsFromCsv();
 
+            CsvUpdater csvUpdater = new CsvUpdater(ProfileListView, profiles);
+            Attach(csvUpdater);
+
+            displayPopup();
+        }
+        private void displayPopup()
+        {
+            PopupAction.DisplayPopup(new WorkoutPopup());
+        }
         private void InitializeData()
         {
             // Create the unassigned """profile""", easier to keep unassigned workouts this way.
@@ -36,9 +51,7 @@ namespace GymApplication
                 var newProfile = new Profile { Name = profileName };
                 profiles.Add(newProfile);
 
-                // Refresh the profiles list
-                ProfileListView.ItemsSource = null;
-                ProfileListView.ItemsSource = profiles;
+                Notify();
             }
         }
 
@@ -74,10 +87,9 @@ namespace GymApplication
 
                     // Remove the workout from the "Unassigned" profile
                     unassignedProfile.Workouts.Remove(workout);
-
-                    // Refresh the profiles list
-                    ProfileListView.ItemsSource = null;
-                    ProfileListView.ItemsSource = profiles;
+                    
+                    // Notify the updater-csv saver
+                    Notify();
                 }
             }
         }
@@ -105,9 +117,7 @@ namespace GymApplication
                         // Remove the profile from the list
                         profiles.Remove(profileToDelete);
 
-                        // Refresh the profiles list
-                        ProfileListView.ItemsSource = null;
-                        ProfileListView.ItemsSource = profiles;
+                        Notify();
                     }
                 }
             }
@@ -141,9 +151,7 @@ namespace GymApplication
             var unassignedProfile = profiles.FirstOrDefault(p => p.Name == "Unassigned");
             unassignedProfile?.Workouts.Add(workout);
 
-            // Refresh the profiles list
-            ProfileListView.ItemsSource = null;
-            ProfileListView.ItemsSource = profiles;
+            Notify();
         }
         private async void OnInspectWorkoutClicked(object sender, EventArgs e)
         {
@@ -157,7 +165,7 @@ namespace GymApplication
 
             var options = await DisplayActionSheet("Choose inspection options", "Cancel", null, "Basic", "Add Descriptions", "Add Images", "Add Descriptions and Images");
 
-            //Probably going to change this entire system to use radio buttons, this is a bit scuffed
+            // Couldn't change this into check marks
             switch (options)
             {
                 case "Basic":
@@ -178,5 +186,102 @@ namespace GymApplication
             var inspectionResult = inspector.Inspect(workout);
             await DisplayAlert("Workout Inspection", inspectionResult, "OK");
         }
+
+        private void ImportWorkoutsFromCsv()
+        {
+            // Get the desktop folder path
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            // Specify the file path
+            string filePath = Path.Combine(desktopPath, "profiles.csv");
+
+            // Check if the file exists
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            // Read all lines from the CSV file
+            string[] lines = File.ReadAllLines(filePath);
+
+            // Skip the header line
+            var dataLines = lines.Skip(1);
+
+            // Iterate through each line
+            foreach (var line in dataLines)
+            {
+                // Split the line into fields
+                var fields = line.Split(',');
+
+                // Extract profile and workout information
+                string profileName = fields[0];
+                string workoutType = fields[1];
+                string workoutName = fields[2];
+                string intensity = fields[3];
+                string[] exerciseNames = fields[4].Split(',');
+
+                workoutType = workoutType.Substring(0, workoutType.IndexOf("Workout"));
+                // Use the extracted information to create and add workouts to the profiles
+
+                bool profileExists = profiles.Any(profile => profile.Name == profileName);
+
+                if (!profileExists)
+                {
+                    // Create new profile with the entered name
+                    var newProfile = new Profile { Name = profileName };
+                    profiles.Add(newProfile);
+
+                }
+                else
+                {
+                    // Do nothing, assuming the profile was already created and the workouts with its name are going to be populated in it.
+                }
+
+                if (!Enum.TryParse(workoutType, out WorkoutType type))
+                {
+                    return;
+                }
+
+                IWorkout workout = WorkoutFactory.CreateWorkout(type, workoutName, int.Parse(intensity));
+
+                if (workout == null)
+                {
+                    return;
+                }
+
+                var profile = profiles.FirstOrDefault(p => p.Name == profileName);
+
+                if (profile == null)
+                {
+                    return;
+                }
+
+                // Assign the selected workout to the selected profile
+                profile.Workouts.Add(workout);
+
+                // Refresh the profiles list, still doing this on launch
+                ProfileListView.ItemsSource = null;
+                ProfileListView.ItemsSource = profiles;
+
+            }
+        }
+        private void Attach(IObserver observer)
+        {
+            observers.Add(observer);
+        }
+
+        private void Detach(IObserver observer)
+        {
+            observers.Remove(observer);
+        }
+
+        private void Notify()
+        {
+            foreach (var observer in observers)
+            {
+                observer.Update();
+            }
+        }
     }
 }
+

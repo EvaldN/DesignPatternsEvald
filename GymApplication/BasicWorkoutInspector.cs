@@ -11,7 +11,8 @@ namespace GymApplication
         public string Inspect(IWorkout workout)
         {
             // Display just the excercises
-            return $"Workout: {workout.Name}\nExercises: {string.Join(", ", workout.Exercises.Select(exercise => exercise.Name))}";
+            return $"Workout: {workout.Name}\nExercises:\n{string.Join("\n", workout.Exercises.Select(exercise => $"- Name: {exercise.Name} {exercise.IntensityEffect} {exercise.IntensitySpecification}"))}";
+
         }
     }
 }

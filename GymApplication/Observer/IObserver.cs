@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymApplication
+namespace GymApplication.Observer
 {
-    public interface IWorkoutInspector
+    internal interface IObserver
     {
-        string Inspect(IWorkout workout);
+        void Update();
     }
 }

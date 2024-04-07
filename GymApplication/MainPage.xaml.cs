@@ -1,4 +1,7 @@
-﻿using MauiPopup;
+﻿using GymApplication.Observer;
+using GymApplication.WorkoutCreation;
+using GymApplication.WorkoutInspection;
+using GymApplication.WorkoutLogic;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
@@ -21,12 +24,6 @@ namespace GymApplication
 
             CsvUpdater csvUpdater = new CsvUpdater(ProfileListView, profiles);
             Attach(csvUpdater);
-
-            displayPopup();
-        }
-        private void displayPopup()
-        {
-            PopupAction.DisplayPopup(new WorkoutPopup());
         }
         private void InitializeData()
         {

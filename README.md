@@ -44,4 +44,4 @@ _The functionalities are divided using MoSCoW analysis_
 ##### Decorator Pattern
 **Purpose**: The Decorator Pattern will be implemented to let the user choose which data they would like to see about their workouts modularly. For example, the user can choose to display descriptions of their excercises or images, or even both.
 ### Class Diagram
-![Class diagram](./ClassDiagram01.jpg)
+![Class diagram](./GymApplicationClassDiagram.jpg)

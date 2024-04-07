@@ -18,7 +18,9 @@ namespace GymApplication
         {
             InitializeComponent();
             InitializeData(); // Load default data, aka, the unassigned """profile"""
-            PopulateProfiles();
+            
+            // Need this for front-end, populates it with currently existing profiles
+            ProfileListView.ItemsSource = profiles;
             ImportWorkouts();
 
             CsvUpdater csvUpdater = new CsvUpdater(ProfileListView, profiles);
@@ -30,12 +32,6 @@ namespace GymApplication
             var unassignedProfile = new Profile { Name = "Unassigned" };
 
             profiles.Add(unassignedProfile); // Add unassigned """profile""" to profiles list
-        }
-
-        private void PopulateProfiles()
-        {
-            // Need this for front-end, populates it with currently existing profiles
-            ProfileListView.ItemsSource = profiles;
         }
 
         private async void OnCreateProfileClicked(object sender, EventArgs e)
@@ -89,6 +85,7 @@ namespace GymApplication
                 }
             }
         }
+        
         private async void OnDeleteProfileClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -122,6 +119,7 @@ namespace GymApplication
                 }
             }
         }
+        
         private async void OnCreateWorkoutClicked(object sender, EventArgs e)
         {
             // Enter workout name
@@ -153,6 +151,7 @@ namespace GymApplication
 
             Notify();
         }
+        
         private async void OnInspectWorkoutClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -186,7 +185,7 @@ namespace GymApplication
             var inspectionResult = inspector.Inspect(workout);
             await DisplayAlert("Workout Inspection", inspectionResult, "OK");
         }
-
+        
         private async void OnDeleteWorkoutClicked(object sender, EventArgs e)
         {
             var button = sender as Button;

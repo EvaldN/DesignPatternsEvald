@@ -1,5 +1,4 @@
 ﻿using GymApplication.Observer;
-using GymApplication.WorkoutCreation;
 using GymApplication.WorkoutInspection;
 using GymApplication.WorkoutLogic;
 using Microsoft.Maui.Controls;
@@ -90,31 +89,35 @@ namespace GymApplication
                 }
             }
         }
-        private void OnDeleteProfileClicked(object sender, EventArgs e)
+        private async void OnDeleteProfileClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
             if (button != null)
             {
-                var profileName = button.CommandParameter as string;
-                if (profileName != null && profileName != "Unassigned")
+                var action = await DisplayActionSheet("Confirm removing the profile?", "Cancel", "Yes");
+                if (action == "Yes")
                 {
-                    var profileToDelete = profiles.FirstOrDefault(p => p.Name == profileName);
-                    if (profileToDelete != null)
+                var profileName = button.CommandParameter as string;
+                    if (profileName != null && profileName != "Unassigned")
                     {
-                        // Reassign all workouts from the profile to the "Unassigned" profile
-                        var unassignedProfile = profiles.FirstOrDefault(p => p.Name == "Unassigned");
-                        if (unassignedProfile != null)
+                        var profileToDelete = profiles.FirstOrDefault(p => p.Name == profileName);
+                        if (profileToDelete != null)
                         {
-                            foreach (var workout in profileToDelete.Workouts)
+                            // Reassign all workouts from the profile to the "Unassigned" profile
+                            var unassignedProfile = profiles.FirstOrDefault(p => p.Name == "Unassigned");
+                            if (unassignedProfile != null)
                             {
-                                unassignedProfile.Workouts.Add(workout);
+                                foreach (var workout in profileToDelete.Workouts)
+                                {
+                                    unassignedProfile.Workouts.Add(workout);
+                                }
                             }
+
+                            // Remove the profile from the list
+                            profiles.Remove(profileToDelete);
+
+                            Notify();
                         }
-
-                        // Remove the profile from the list
-                        profiles.Remove(profileToDelete);
-
-                        Notify();
                     }
                 }
             }
@@ -197,7 +200,7 @@ namespace GymApplication
                 if (selectedProfile != null && selectedProfile != "Cancel")
                 {
                     var workout = profile.Workouts.FirstOrDefault(w => w.Name == selectedWorkout);
-                    var action = await DisplayActionSheet("Confirm removing the class?", "Cancel", "Yes");
+                    var action = await DisplayActionSheet("Confirm removing the workout?", "Cancel", "Yes");
                     if (action == "Yes")
                     {
                         profile.Workouts.Remove(workout);

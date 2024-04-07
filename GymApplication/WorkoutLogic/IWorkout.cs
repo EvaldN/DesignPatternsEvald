@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GymApplication.WorkoutCreation;
 
-namespace GymApplication
+namespace GymApplication.WorkoutLogic
 {
     public interface IWorkout
     {

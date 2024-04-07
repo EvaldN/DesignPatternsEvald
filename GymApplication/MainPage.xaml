@@ -28,8 +28,8 @@
                                     <DataTemplate>
                                         <ViewCell>
                                             <StackLayout Orientation="Horizontal">
-                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}" />
                                                 <Label Text="{Binding Name}" />
+                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}" />
                                             </StackLayout>
                                         </ViewCell>
                                     </DataTemplate>
@@ -46,5 +46,6 @@
         <Button Text="Create Profile" Clicked="OnCreateProfileClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
         <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
         <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
+        <Button Text="Delete Workout" Clicked="OnDeleteWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
     </StackLayout>
 </ContentPage>

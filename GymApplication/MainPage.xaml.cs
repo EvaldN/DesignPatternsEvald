@@ -184,6 +184,30 @@ namespace GymApplication
             await DisplayAlert("Workout Inspection", inspectionResult, "OK");
         }
 
+        private async void OnDeleteWorkoutClicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+
+            var selectedProfile = await DisplayActionSheet("Select Profile", "Cancel", null, profiles.Select(profile => profile.Name).ToArray());
+
+            if (selectedProfile != null && selectedProfile != "Cancel")
+            {
+                var profile = profiles.FirstOrDefault(w => w.Name == selectedProfile);
+                var selectedWorkout = await DisplayActionSheet("Select Workout", "Cancel", null, profile.Workouts.Select(workout => workout.Name).ToArray());
+                if (selectedProfile != null && selectedProfile != "Cancel")
+                {
+                    var workout = profile.Workouts.FirstOrDefault(w => w.Name == selectedWorkout);
+                    var action = await DisplayActionSheet("Confirm removing the class?", "Cancel", "Yes");
+                    if (action == "Yes")
+                    {
+                        profile.Workouts.Remove(workout);
+                        workout = null;
+                        Notify();
+                    }
+                }
+            }
+        }
+
         private void ImportWorkoutsFromCsv()
         {
             // Get the desktop folder path

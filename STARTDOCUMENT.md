@@ -66,3 +66,15 @@ Gym Workout manager is an open-source application designed for gyms who offer wo
 ### Group
 
 This application is solly made by its author - Evald Narkevičius 
+
+### How to run
+
+1. Download the application from the main branch and unzip the archive.
+2. Open the solution of the application (GymApplication.sln) inside the GymApplication folder, using Visual Studio.
+3. Launch the application once the project loads.
+
+DISCLAIMER: the application was not tested on anything except Visual Studio 2022, using Windows.
+
+### Note
+
+Regarding the image decorator simply throwing paths to images instead of actual ones, I found out very late that DisplayAlert cannot display messages and I simply did not have enough time to rebuild the logic of the app to facilitate image display, so I kept it unchanged as a way to show that the decorator still works as intended.

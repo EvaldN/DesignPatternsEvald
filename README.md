@@ -9,7 +9,17 @@ By Evald Narkevičius (Student nr. 4981499) for Design Patterns at NHL Stenden E
 Gym Workout manager is an open-source application designed for gyms who offer workout routines to their clients. The application creates pre-defined sets of workouts based on the user's input of workout type and intensity. With this data, the application calculates the intensity of the selected type of a workout and provides a list which then can be assigned to a profile to keep track of which workouts belong to which user.
 
 ### Features
-_The functionalities are divided using MoSCoW analysis_
+
+- Creating workouts
+- Creating profiles
+- Assigning workouts
+- List display of all profiles and their assigned workouts
+- Deleting workouts
+- Deleting profiles
+- Live-updating all changes
+
+### MoSCoW Analysis
+
 #### Must have
 ---
 **Different workout creation** - A system that can create three different workout types: strength, cardio and flexibility workouts.
@@ -38,6 +48,11 @@ _The functionalities are divided using MoSCoW analysis_
 
 **Post-development support** - The application will not be updated after its development is finished.
 
+## Technology Used
+
+- GitHub version management
+- .NET MAUI front-end with C# back-end
+
 ### Design Patterns Used
 ##### Factory Method Pattern
 **Purpose**: The Factory Method Pattern will be used to create workout routines dynamically based on user inputs. It solves the problem of creating objects without specifying their concrete classes, allowing for flexibility and extensibility in creating various types of workouts.
@@ -47,3 +62,7 @@ _The functionalities are divided using MoSCoW analysis_
 **Purpose**: The Decorator Pattern will be implemented to let the user choose which data they would like to see about their workouts modularly. For example, the user can choose to display descriptions of their excercises or images, or even both.
 ### Class Diagram
 ![Class diagram](./GymApplicationClassDiagram.png)
+
+### Group
+
+This application is solly made by its author - Evald Narkevičius 

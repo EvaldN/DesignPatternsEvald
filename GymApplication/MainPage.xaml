@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout>
-        <Label Text="Profiles and Workouts" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10"/>
+        <Label Text="Gym Workout Manager" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10"/>
         <ListView x:Name="ProfileListView">
             <ListView.ItemTemplate>
                 <DataTemplate>

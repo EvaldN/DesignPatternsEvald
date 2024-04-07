@@ -19,7 +19,7 @@ namespace GymApplication
             InitializeComponent();
             InitializeData(); // Load default data, aka, the unassigned """profile"""
             PopulateProfiles();
-            ImportWorkoutsFromCsv();
+            ImportWorkouts();
 
             CsvUpdater csvUpdater = new CsvUpdater(ProfileListView, profiles);
             Attach(csvUpdater);
@@ -211,13 +211,23 @@ namespace GymApplication
             }
         }
 
-        private void ImportWorkoutsFromCsv()
+        private string GetProjectDirectory()
         {
-            // Get the desktop folder path
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string targetPath = Path.GetDirectoryName(basePath);
+
+            while (Path.GetFileName(targetPath) != "GymApplication" && !string.IsNullOrEmpty(targetPath))
+            {
+                targetPath = Path.GetDirectoryName(targetPath); // Go up one more directory
+            }
+            return targetPath;
+        }
+
+        private void ImportWorkouts()
+        {
 
             // Specify the file path
-            string filePath = Path.Combine(desktopPath, "profiles.csv");
+            string filePath = Path.Combine(GetProjectDirectory(), "profiles.csv");
 
             // Check if the file exists
             if (!File.Exists(filePath))

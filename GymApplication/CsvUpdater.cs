@@ -25,14 +25,22 @@ namespace GymApplication
                 ProfileListView.ItemsSource = null;
                 ProfileListView.ItemsSource = profiles;
         }
+        private string GetProjectDirectory()
+        {
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string targetPath = Path.GetDirectoryName(basePath);
 
+            while (Path.GetFileName(targetPath) != "GymApplication" && !string.IsNullOrEmpty(targetPath))
+            {
+                targetPath = Path.GetDirectoryName(targetPath); // Go up one more directory
+            }
+            return targetPath;
+        }
         private void ExportWorkoutsToCsv()
         {
-            // Get the desktop folder path
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             // Specify the file path
-            string filePath = Path.Combine(desktopPath, "profiles.csv");
+            string filePath = Path.Combine(GetProjectDirectory(), "profiles.csv");
 
             // Define the CSV content
             var csvContent = new StringBuilder();

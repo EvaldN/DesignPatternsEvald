@@ -9,7 +9,7 @@ namespace GymApplication.WorkoutLogic
     public interface IWorkout
     {
         string Name { get; }
-        int Intensity { get; }
+        double Intensity { get; }
         List<Exercise> Exercises { get; }
     }
 }

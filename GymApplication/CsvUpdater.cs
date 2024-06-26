@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,19 +12,15 @@ namespace GymApplication
     internal class CsvUpdater : IObserver
     {
         private List<Profile> profiles;
-        private ListView ProfileListView;
 
-        public CsvUpdater(ListView profileListView, List<Profile> profiles)
+        public CsvUpdater(List<Profile> profiles)
         {
-            this.ProfileListView = profileListView;
             this.profiles = profiles;
         }
         public void Update()
         {
-                ExportWorkoutsToCsv();
-                // Refresh the profiles list
-                ProfileListView.ItemsSource = null;
-                ProfileListView.ItemsSource = profiles;
+            Debug.WriteLine("Updating csv by listening");
+            ExportWorkoutsToCsv();
         }
         private string GetProjectDirectory()
         {

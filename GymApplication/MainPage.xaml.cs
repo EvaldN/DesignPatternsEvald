@@ -1,9 +1,11 @@
-﻿using GymApplication.Observer;
+﻿using GymApplicatio;
+using GymApplication.Observer;
 using GymApplication.WorkoutInspection;
 using GymApplication.WorkoutLogic;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
+using System.Diagnostics;
 using System.Text;
 
 namespace GymApplication
@@ -18,13 +20,13 @@ namespace GymApplication
         {
             InitializeComponent();
             InitializeData(); // Load default data, aka, the unassigned """profile"""
-            
-            // Need this for front-end, populates it with currently existing profiles
-            ProfileListView.ItemsSource = profiles;
             ImportWorkouts();
 
-            CsvUpdater csvUpdater = new CsvUpdater(ProfileListView, profiles);
+            CsvUpdater csvUpdater = new CsvUpdater(profiles);
+            UIUpdater uiUpdater = new UIUpdater(ProfileListView, profiles, TotalProfilesLabel, TotalWorkoutsLabel);
             Attach(csvUpdater);
+            Attach(uiUpdater);
+            Notify();
         }
         private void InitializeData()
         {
@@ -119,7 +121,7 @@ namespace GymApplication
                 }
             }
         }
-        
+
         private async void OnCreateWorkoutClicked(object sender, EventArgs e)
         {
             // Enter workout name
@@ -136,13 +138,81 @@ namespace GymApplication
             if (!Enum.TryParse(selectedType, out WorkoutType type))
                 return;
 
-            // Enter workout intensity
-            int intensity;
-            bool intensityValid = int.TryParse(await DisplayPromptAsync("Create Workout", "Enter workout intensity (1-10):"), out intensity);
-            if (!intensityValid || intensity < 1 || intensity > 10)
-                return; // Do nothing if intensity is not valid
+            // Choose intensity calculation method
+            var selectedMethod = await DisplayActionSheet("Select Intensity Calculation Method", "Cancel", null, "Basic", "BMI-based", "Fitness-based", "Combined");
+            if (selectedMethod == "Cancel")
+                return;
 
-            // Create the workout based on the selected type and intensity
+            double intensity = 1;
+            WorkoutComponent workoutComponent = new BasicIntensity();
+
+            // Basic should always return 3
+            if (selectedMethod == "Basic")
+            {
+                intensity = workoutComponent.Operation();
+            }
+            // Based on input, BMI is calculated and assigned the easiest to underweight, medium to overweight and hardest to standard.
+            else if (selectedMethod == "BMI-based")
+            {
+                // Grab height and weight
+                string heightInput = await DisplayPromptAsync("Create Workout", "Enter height (meters):");
+                string weightInput = await DisplayPromptAsync("Create Workout", "Enter weight (kilograms):");
+                // Parse them into doubles
+                if (double.TryParse(heightInput, out double height) && double.TryParse(weightInput, out double weight))
+                {
+                    // Run the BMI intensity decorator
+                    workoutComponent = new BMIIntensityDecorator(workoutComponent, height, weight);
+                    intensity = workoutComponent.Operation();
+                }
+                else
+                {
+                    // Invalid input handling
+                    await DisplayAlert("Invalid Input", "Please enter valid numbers for height and weight.", "OK");
+                    return;
+                }
+            }
+            // Assigns harder intensity to more fit choice, base is 2, intermediate 5, advanced 7.
+            else if (selectedMethod == "Fitness-based")
+            {
+                // Grab the experience level string
+                string experienceLevel = await DisplayActionSheet("Select your fitness level", "Cancel", null, "Beginner", "Intermediate", "Advanced");
+                // Run the fitness intensity decorator
+                workoutComponent = new FitnessLevelIntensityDecorator(workoutComponent, experienceLevel);
+                intensity = workoutComponent.Operation();
+            }
+            // Combines the two previous decorators into the composite one and based on input returns their average.
+            else if (selectedMethod == "Combined")
+            {
+                // Grab all previously needed inputs.
+                string heightInput = await DisplayPromptAsync("Create Workout", "Enter height (meters):");
+                string weightInput = await DisplayPromptAsync("Create Workout", "Enter weight (kilograms):");
+                string experienceLevel = await DisplayActionSheet("Select your fitness level", "Cancel", null, "Beginner", "Intermediate", "Advanced");
+                // Parse height and weight into doubles
+                if (double.TryParse(heightInput, out double height) && double.TryParse(weightInput, out double weight))
+                {
+                    // Create a list of decorators
+                    var decorators = new List<IntensityDecorator>
+                    {
+                        new BMIIntensityDecorator(workoutComponent, height, weight),
+                        new FitnessLevelIntensityDecorator(workoutComponent, experienceLevel),
+                    };
+                    // Execute the composite intensity decorator
+                    workoutComponent = new CompositeIntensityDecorator(workoutComponent, decorators);
+
+                    intensity = workoutComponent.Operation();
+                }
+                else
+                {
+                    // Invalid input handling
+                    await DisplayAlert("Invalid Input", "Please enter valid numbers for height and weight.", "OK");
+                    return;
+                }
+
+            }
+
+            Debug.WriteLine(intensity);
+
+            // Create the workout based on the selected type, intensity, and chosen method
             IWorkout workout = WorkoutFactory.CreateWorkout(type, name, intensity);
 
             // Assign the workout to the "Unassigned" profile
@@ -151,7 +221,8 @@ namespace GymApplication
 
             Notify();
         }
-        
+
+
         private async void OnInspectWorkoutClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -314,6 +385,119 @@ namespace GymApplication
             {
                 observer.Update();
             }
+        }
+    }
+
+        // Component interface defines the contract for concrete components and decorators
+        public abstract class WorkoutComponent
+        {
+            public abstract int Operation();
+        }
+
+        // Concrete component provides the basic implementation
+        public class BasicIntensity : WorkoutComponent
+        {
+            public override int Operation()
+            {
+                return 3;
+            }
+        }
+
+        public abstract class IntensityDecorator : WorkoutComponent
+        {
+            protected WorkoutComponent _component;
+
+            public IntensityDecorator(WorkoutComponent component)
+            {
+                this._component = component;
+            }
+
+            public override int Operation()
+            {
+                if (_component != null)
+                {
+                    return _component.Operation();
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+    public class BMIIntensityDecorator : IntensityDecorator
+    {
+        private double _height;
+        private double _weight;
+          
+        public BMIIntensityDecorator(WorkoutComponent component, double height, double weight) : base(component)
+        {
+            this._height = height;
+            this._weight = weight;
+        }
+
+        public override int Operation()
+        {
+            int baseIntensity = _component.Operation();
+            double bmi = _height / (_weight * _weight);
+
+            if (bmi < 18.5)
+            {
+                return baseIntensity + 1;
+            }
+            else if (bmi >= 18.5 && bmi < 25)
+            {
+                return baseIntensity + 3;
+            }
+            else
+            {
+                return baseIntensity + 2;
+            }
+        }
+    }
+    public class FitnessLevelIntensityDecorator : IntensityDecorator
+    {
+        private string _fitnessLevel;
+
+        public FitnessLevelIntensityDecorator(WorkoutComponent component, string fitnessLevel) : base(component)
+        {
+            this._fitnessLevel = fitnessLevel;
+        }
+
+        public override int Operation()
+        {
+            int baseIntensity = _component.Operation();
+            switch (_fitnessLevel.ToLower())
+            {
+                case "beginner":
+                    return baseIntensity - 1;
+                case "intermediate":
+                    return baseIntensity + 2;
+                case "advanced":
+                    return baseIntensity + 4;
+                default:
+                    return baseIntensity;
+            }
+        }
+    }
+    public class CompositeIntensityDecorator : IntensityDecorator
+    {
+        private List<IntensityDecorator> _decorators;
+
+        public CompositeIntensityDecorator(WorkoutComponent component, List<IntensityDecorator> decorators) : base(component)
+        {
+            this._decorators = decorators;
+        }
+
+        public override int Operation()
+        {
+            int baseIntensity = _component.Operation();
+            int sumOfIntensities = 0;
+            foreach (var decorator in _decorators)
+            {
+                sumOfIntensities += decorator.Operation();
+            }
+            return sumOfIntensities / _decorators.Count;
         }
     }
 }

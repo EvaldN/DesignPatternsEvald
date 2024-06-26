@@ -15,7 +15,7 @@ namespace GymApplication.WorkoutLogic
 
     public static class WorkoutFactory
     {
-        public static IWorkout CreateWorkout(WorkoutType type, string name, int intensity)
+        public static IWorkout CreateWorkout(WorkoutType type, string name, double intensity)
         {
             IWorkout workout;
             switch (type)
@@ -36,7 +36,7 @@ namespace GymApplication.WorkoutLogic
         }
 
         // Methods to add predefined excercise lists to the workouts
-        private static List<Exercise> GetStrengthExercises(int intensity)
+        private static List<Exercise> GetStrengthExercises(double intensity)
         {
             var exercises = new List<Exercise>
         {
@@ -47,7 +47,7 @@ namespace GymApplication.WorkoutLogic
             return exercises;
         }
 
-        private static List<Exercise> GetCardioExercises(int intensity)
+        private static List<Exercise> GetCardioExercises(double intensity)
         {
             var exercises = new List<Exercise>
         {
@@ -58,7 +58,7 @@ namespace GymApplication.WorkoutLogic
             return exercises;
         }
 
-        private static List<Exercise> GetFlexibilityExercises(int intensity)
+        private static List<Exercise> GetFlexibilityExercises(double intensity)
         {
             var exercises = new List<Exercise>
         {

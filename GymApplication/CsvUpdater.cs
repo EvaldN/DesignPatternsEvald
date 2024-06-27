@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -12,9 +11,9 @@ namespace GymApplication
 {
     internal class CsvUpdater : IObserver
     {
-        private ObservableCollection<Profile> profiles;
+        private List<Profile> profiles;
 
-        public CsvUpdater(ObservableCollection<Profile> profiles)
+        public CsvUpdater(List<Profile> profiles)
         {
             this.profiles = profiles;
         }

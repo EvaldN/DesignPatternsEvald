@@ -1,5 +1,4 @@
-﻿using GymApplicatio;
-using GymApplication.Observer;
+﻿using GymApplication.Observer;
 using GymApplication.WorkoutInspection;
 using GymApplication.WorkoutLogic;
 using GymApplication.WorkoutIntensityDecorators;

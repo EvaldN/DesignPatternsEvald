@@ -1,27 +1,31 @@
 ﻿using GymApplication.Observer;
 using GymApplication.WorkoutLogic;
+using Microsoft.Maui.Controls;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GymApplication
 {
     internal class UIUpdater : IObserver
     {
-        private List<Profile> profiles;
+        private ObservableCollection<Profile> profiles;
         private ListView _profileListView;
         private Label _totalProfilesLabel;
         private Label _totalWorkoutsLabel;
-        public UIUpdater(ListView ProfileListView, List<Profile> profiles, Label totalProfilesLabel, Label totalWorkoutsLabel)
+
+        public UIUpdater(ListView profileListView, ObservableCollection<Profile> profiles, Label totalProfilesLabel, Label totalWorkoutsLabel)
         {
-            this._profileListView = ProfileListView;
+            this._profileListView = profileListView;
             this.profiles = profiles;
             _totalProfilesLabel = totalProfilesLabel;
             _totalWorkoutsLabel = totalWorkoutsLabel;
+
+            // Initial UI update
+            Update();
         }
+
         public void Update()
         {
             Debug.WriteLine("Updating front-end by listening");
@@ -43,26 +47,18 @@ namespace GymApplication
                         return;
                     }
 
-                    // Refresh the profiles list
-                    Debug.WriteLine("Setting ItemsSource to null");
-                    _profileListView.ItemsSource = null;
-
-                    Debug.WriteLine("Setting ItemsSource to profiles");
+                    // The ObservableCollection automatically updates the ListView, no need to set ItemsSource to null and reassign
                     _profileListView.ItemsSource = profiles;
 
-                    // Refresh the totals labels according to the change of the main page's profiles state
-                    _totalProfilesLabel.Text = string.Empty;
-                    _totalProfilesLabel.Text = "Total profiles: " + (profiles.Count - 1);
-
-                    Debug.WriteLine(profiles);
+                    // Update labels
+                    _totalProfilesLabel.Text = $"Total profiles: {profiles.Count - 1}";
 
                     int workoutCount = 0;
                     foreach (Profile profile in profiles)
                     {
                         workoutCount += profile.Workouts.Count;
                     }
-                    _totalWorkoutsLabel.Text = string.Empty;
-                    _totalWorkoutsLabel.Text = "Total workouts: " + workoutCount.ToString();
+                    _totalWorkoutsLabel.Text = $"Total workouts: {workoutCount}";
                 }
                 catch (System.Runtime.InteropServices.COMException comEx)
                 {

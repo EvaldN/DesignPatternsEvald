@@ -8,20 +8,19 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using System.Globalization;
-using System.Collections.ObjectModel;
 
 namespace GymApplication
 {
     public partial class MainPage : ContentPage, IObservable 
     {
-        public ObservableCollection<Profile> profiles = new ObservableCollection<Profile>();
+        public List<Profile> profiles = new List<Profile>();
 
         private List<IObserver> observers = new List<IObserver>();
 
         public MainPage()
         {
             InitializeComponent();
-            InitializeData();
+            InitializeData(); // Load default data, aka, the unassigned """profile"""
             ImportWorkouts();
 
             CsvUpdater csvUpdater = new CsvUpdater(profiles);

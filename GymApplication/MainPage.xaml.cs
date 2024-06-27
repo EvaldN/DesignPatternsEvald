@@ -204,19 +204,24 @@ namespace GymApplication
                 string heightInput = await DisplayPromptAsync("Create Workout", "Enter height (meters):");
                 string weightInput = await DisplayPromptAsync("Create Workout", "Enter weight (kilograms):");
                 string experienceLevel = await DisplayActionSheet("Select your fitness level", "Cancel", null, "Beginner", "Intermediate", "Advanced");
-                // Parse height and weight into doubles
-                if (double.TryParse(heightInput, out double height) && double.TryParse(weightInput, out double weight))
+
+                // Attempt to parse the inputs using different cultures
+                if ((double.TryParse(heightInput, NumberStyles.Any, CultureInfo.InvariantCulture, out double height) ||
+                     double.TryParse(heightInput, NumberStyles.Any, CultureInfo.GetCultureInfo("fr-FR"), out height)) &&
+                    (double.TryParse(weightInput, NumberStyles.Any, CultureInfo.InvariantCulture, out double weight) ||
+                     double.TryParse(weightInput, NumberStyles.Any, CultureInfo.GetCultureInfo("fr-FR"), out weight)))
                 {
-                    // Create a list of decorators
-                    var decorators = new List<IntensityDecorator>
+                        // Create a list of decorators
+                        var decorators = new List<WorkoutComponent>
                     {
                         new BMIIntensityDecorator(workoutComponent, height, weight),
                         new FitnessLevelIntensityDecorator(workoutComponent, experienceLevel),
                     };
-                    // Execute the composite intensity decorator
-                    workoutComponent = new CompositeIntensityDecorator(workoutComponent, decorators);
 
-                    intensity = workoutComponent.Operation();
+                        // Execute the composite intensity decorator
+                        workoutComponent = new CompositeIntensityDecorator(workoutComponent, decorators);
+
+                        intensity = workoutComponent.Operation();
                 }
                 else
                 {
@@ -224,8 +229,8 @@ namespace GymApplication
                     await DisplayAlert("Invalid Input", "Please enter valid numbers for height and weight.", "OK");
                     return;
                 }
-
             }
+
 
             Debug.WriteLine(intensity);
 

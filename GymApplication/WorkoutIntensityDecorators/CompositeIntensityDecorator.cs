@@ -8,22 +8,22 @@ namespace GymApplication.WorkoutIntensityDecorators
 {
     public class CompositeIntensityDecorator : IntensityDecorator
     {
-        private List<IntensityDecorator> _decorators;
+        private List<WorkoutComponent> _componentsToExecute;
 
-        public CompositeIntensityDecorator(WorkoutComponent component, List<IntensityDecorator> decorators) : base(component)
+        public CompositeIntensityDecorator(WorkoutComponent component, List<WorkoutComponent> decorators) : base(component)
         {
-            this._decorators = decorators;
+            this._componentsToExecute = decorators;
         }
 
         public override int Operation()
         {
             int baseIntensity = _component.Operation();
             int sumOfIntensities = 0;
-            foreach (var decorator in _decorators)
+            foreach (var decorator in _componentsToExecute)
             {
                 sumOfIntensities += decorator.Operation();
             }
-            return sumOfIntensities / _decorators.Count;
+            return sumOfIntensities / _componentsToExecute.Count;
         }
     }
 }

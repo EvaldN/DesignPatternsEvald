@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 namespace GymApplication.WorkoutIntensityDecorators
 {
     public abstract class IntensityDecorator : WorkoutComponent
-    {
-        protected WorkoutComponent _component;
-
-        public IntensityDecorator(WorkoutComponent component)
         {
-            this._component = component;
-        }
+            protected WorkoutComponent _component;
 
-        public override int Operation()
-        {
-            if (_component != null)
+            public IntensityDecorator(WorkoutComponent component)
             {
-                return _component.Operation();
+                this._component = component;
             }
-            else
+
+            public override int Operation()
             {
-                return -1;
+                if (_component != null)
+                {
+                    return _component.Operation();
+                }
+                else
+                {
+                    return -1;
+                }
             }
         }
-    }
 }

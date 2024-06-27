@@ -29,7 +29,7 @@ namespace GymApplication
 
             while (Path.GetFileName(targetPath) != "GymApplication" && !string.IsNullOrEmpty(targetPath))
             {
-                targetPath = Path.GetDirectoryName(targetPath); // Go up one more directory
+                targetPath = Path.GetDirectoryName(targetPath); // Go up one more directory, helps when launching the project in debug mode
             }
             return targetPath;
         }

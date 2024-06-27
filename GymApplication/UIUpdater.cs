@@ -25,17 +25,28 @@ namespace GymApplicatio
         public void Update()
         {
             Debug.WriteLine("Updating front-end by listening");
-            // Refresh the profiles list
-            _profileListView.ItemsSource = null;
-            _profileListView.ItemsSource = profiles;
 
-            _totalProfilesLabel.Text = string.Empty;
-            _totalProfilesLabel.Text = "Total profiles: " + (profiles.Count - 1);
-            Debug.WriteLine(profiles);
-            int workoutCount = 0;
-            foreach (Profile profile in profiles) { workoutCount += profile.Workouts.Count; }
-            _totalWorkoutsLabel.Text = string.Empty;
-            _totalWorkoutsLabel.Text = "Total workouts: " + workoutCount.ToString();
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                // Refresh the profiles list
+                _profileListView.ItemsSource = null;
+                _profileListView.ItemsSource = profiles;
+
+                // Refresh the totals labels according to the change of the main page's profiles state
+                _totalProfilesLabel.Text = string.Empty;
+                _totalProfilesLabel.Text = "Total profiles: " + (profiles.Count - 1);
+
+                Debug.WriteLine(profiles);
+
+                int workoutCount = 0;
+                foreach (Profile profile in profiles)
+                {
+                    workoutCount += profile.Workouts.Count;
+                }
+                _totalWorkoutsLabel.Text = string.Empty;
+                _totalWorkoutsLabel.Text = "Total workouts: " + workoutCount.ToString();
+            });
         }
+
     }
 }

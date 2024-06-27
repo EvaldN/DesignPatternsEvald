@@ -2,11 +2,13 @@
 using GymApplication.Observer;
 using GymApplication.WorkoutInspection;
 using GymApplication.WorkoutLogic;
+using GymApplication.WorkoutIntensityDecorators;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
 using System.Diagnostics;
 using System.Text;
+using System.Globalization;
 
 namespace GymApplication
 {
@@ -157,20 +159,35 @@ namespace GymApplication
                 // Grab height and weight
                 string heightInput = await DisplayPromptAsync("Create Workout", "Enter height (meters):");
                 string weightInput = await DisplayPromptAsync("Create Workout", "Enter weight (kilograms):");
-                // Parse them into doubles
-                if (double.TryParse(heightInput, out double height) && double.TryParse(weightInput, out double weight))
+
+                // Attempt to parse the inputs using different cultures, so things like x.x or y,y are accounted for
+                if (double.TryParse(heightInput, NumberStyles.Any, CultureInfo.InvariantCulture, out double height) ||
+                    double.TryParse(heightInput, NumberStyles.Any, CultureInfo.GetCultureInfo("fr-FR"), out height))
                 {
-                    // Run the BMI intensity decorator
-                    workoutComponent = new BMIIntensityDecorator(workoutComponent, height, weight);
-                    intensity = workoutComponent.Operation();
+                    if (double.TryParse(weightInput, NumberStyles.Any, CultureInfo.InvariantCulture, out double weight) ||
+                        double.TryParse(weightInput, NumberStyles.Any, CultureInfo.GetCultureInfo("fr-FR"), out weight))
+                    {
+                        Debug.WriteLine(height);
+                        Debug.WriteLine(weight);
+                        // Run the BMI intensity decorator
+                        workoutComponent = new BMIIntensityDecorator(workoutComponent, height, weight);
+                        intensity = workoutComponent.Operation();
+                    }
+                    else
+                    {
+                        // Invalid weight input handling
+                        await DisplayAlert("Invalid Input", "Please enter valid numbers for weight.", "OK");
+                        return;
+                    }
                 }
                 else
                 {
-                    // Invalid input handling
-                    await DisplayAlert("Invalid Input", "Please enter valid numbers for height and weight.", "OK");
+                    // Invalid height input handling
+                    await DisplayAlert("Invalid Input", "Please enter valid numbers for height.", "OK");
                     return;
                 }
             }
+
             // Assigns harder intensity to more fit choice, base is 2, intermediate 5, advanced 7.
             else if (selectedMethod == "Fitness-based")
             {
@@ -385,119 +402,6 @@ namespace GymApplication
             {
                 observer.Update();
             }
-        }
-    }
-
-        // Component interface defines the contract for concrete components and decorators
-        public abstract class WorkoutComponent
-        {
-            public abstract int Operation();
-        }
-
-        // Concrete component provides the basic implementation
-        public class BasicIntensity : WorkoutComponent
-        {
-            public override int Operation()
-            {
-                return 3;
-            }
-        }
-
-        public abstract class IntensityDecorator : WorkoutComponent
-        {
-            protected WorkoutComponent _component;
-
-            public IntensityDecorator(WorkoutComponent component)
-            {
-                this._component = component;
-            }
-
-            public override int Operation()
-            {
-                if (_component != null)
-                {
-                    return _component.Operation();
-                }
-                else
-                {
-                    return -1;
-                }
-            }
-        }
-
-    public class BMIIntensityDecorator : IntensityDecorator
-    {
-        private double _height;
-        private double _weight;
-          
-        public BMIIntensityDecorator(WorkoutComponent component, double height, double weight) : base(component)
-        {
-            this._height = height;
-            this._weight = weight;
-        }
-
-        public override int Operation()
-        {
-            int baseIntensity = _component.Operation();
-            double bmi = _height / (_weight * _weight);
-
-            if (bmi < 18.5)
-            {
-                return baseIntensity + 1;
-            }
-            else if (bmi >= 18.5 && bmi < 25)
-            {
-                return baseIntensity + 3;
-            }
-            else
-            {
-                return baseIntensity + 2;
-            }
-        }
-    }
-    public class FitnessLevelIntensityDecorator : IntensityDecorator
-    {
-        private string _fitnessLevel;
-
-        public FitnessLevelIntensityDecorator(WorkoutComponent component, string fitnessLevel) : base(component)
-        {
-            this._fitnessLevel = fitnessLevel;
-        }
-
-        public override int Operation()
-        {
-            int baseIntensity = _component.Operation();
-            switch (_fitnessLevel.ToLower())
-            {
-                case "beginner":
-                    return baseIntensity - 1;
-                case "intermediate":
-                    return baseIntensity + 2;
-                case "advanced":
-                    return baseIntensity + 4;
-                default:
-                    return baseIntensity;
-            }
-        }
-    }
-    public class CompositeIntensityDecorator : IntensityDecorator
-    {
-        private List<IntensityDecorator> _decorators;
-
-        public CompositeIntensityDecorator(WorkoutComponent component, List<IntensityDecorator> decorators) : base(component)
-        {
-            this._decorators = decorators;
-        }
-
-        public override int Operation()
-        {
-            int baseIntensity = _component.Operation();
-            int sumOfIntensities = 0;
-            foreach (var decorator in _decorators)
-            {
-                sumOfIntensities += decorator.Operation();
-            }
-            return sumOfIntensities / _decorators.Count;
         }
     }
 }

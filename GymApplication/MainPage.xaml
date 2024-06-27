@@ -15,6 +15,7 @@
                         <Setter Property="IsVisible" Value="False" />
                     </DataTrigger>
                 </Style.Triggers>
+                
             </Style>
 
             <!-- Define a base style for Labels -->
@@ -22,12 +23,22 @@
                 <Setter Property="TextColor" Value="#007BFF" />
                 <!-- Blue text color for labels -->
             </Style>
+
+            <!-- Frame style for profiles -->
+            <Style TargetType="Frame" x:Key="ProfileFrameStyle">
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="Padding" Value="10" />
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="HasShadow" Value="True" />
+                <Setter Property="BackgroundColor" Value="Silver"/>
+                <Setter Property="WidthRequest" Value="600"/>
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <StackLayout>
         <!-- Header label with centered text -->
-        <Label Text="Gym Workout Manager" FontSize="Large" HorizontalOptions="Center" Margin="0,20,0,10" />
+        <Label Text="Gym Workout Manager" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,20,0,10" />
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
             <Label x:Name="TotalProfilesLabel" Text="Total profiles: " Margin="10,20,10,0"></Label>
             <Label x:Name="TotalWorkoutsLabel" Text="Total workouts: " Margin="10,20,10,0"></Label>
@@ -37,32 +48,35 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout>
-                            <!-- Profile name -->
-                            <Label Text="{Binding Name}" FontAttributes="Bold" />
+                        <!-- Wrap each profile in a frame -->
+                        <Frame Style="{StaticResource ProfileFrameStyle}">
+                            <StackLayout>
+                                <!-- Profile name -->
+                                <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalOptions="Center"/>
 
-                            <!-- Workouts list -->
-                            <Label Text="Workouts:" Margin="0,5,0,0" />
-                            <ListView ItemsSource="{Binding Workouts}" SeparatorVisibility="None">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <ViewCell>
-                                            <StackLayout Orientation="Horizontal" Padding="0,5,0,0">
-                                                <Label Text="{Binding Name}" VerticalOptions="Center" />
-                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}"
-                                                        BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,0,0,0" />
-                                                <!-- Blue button with white text -->
-                                            </StackLayout>
-                                        </ViewCell>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                <!-- Workouts list -->
+                                <Label Text="Workouts:" Margin="0,5,0,0"/>
+                                <ListView ItemsSource="{Binding Workouts}" SeparatorVisibility="None">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <StackLayout Orientation="Horizontal" Padding="0,5,0,0">
+                                                    <Label Text="{Binding Name}" VerticalOptions="Center" />
+                                                    <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}"
+                                                            BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,0,0,0" />
+                                                    <!-- Blue button with white text -->
+                                                </StackLayout>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
 
-                            <!-- Delete profile button -->
-                            <Button Text="Delete Profile" Clicked="OnDeleteProfileClicked" CommandParameter="{Binding Name}" 
-                                    Style="{StaticResource DeleteButtonStyle}" />
+                                <!-- Delete profile button -->
+                                <Button Text="Delete Profile" Clicked="OnDeleteProfileClicked" CommandParameter="{Binding Name}" 
+                                        Style="{StaticResource DeleteButtonStyle}" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,0,0,0" />
 
-                        </StackLayout>
+                            </StackLayout>
+                        </Frame>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -70,10 +84,10 @@
 
         <!-- Action buttons -->
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Button Text="Create Profile" Clicked="OnCreateProfileClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,0" />
-            <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,0" />
-            <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,0" />
-            <Button Text="Delete Workout" Clicked="OnDeleteWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,0" />
+            <Button Text="Create Profile" Clicked="OnCreateProfileClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,10" />
+            <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,10" />
+            <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,10" />
+            <Button Text="Delete Workout" Clicked="OnDeleteWorkoutClicked" BackgroundColor="#007BFF" TextColor="#FFFFFF" Margin="10,20,10,10" />
         </StackLayout>
     </StackLayout>
 </ContentPage>

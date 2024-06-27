@@ -2,6 +2,7 @@
 using GymApplication.WorkoutLogic;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,11 @@ namespace GymApplication
 {
     internal class UIUpdater : IObserver
     {
-        private List<Profile> profiles;
+        private ObservableCollection<Profile> profiles;
         private ListView _profileListView;
         private Label _totalProfilesLabel;
         private Label _totalWorkoutsLabel;
-        public UIUpdater(ListView ProfileListView, List<Profile> profiles, Label totalProfilesLabel, Label totalWorkoutsLabel)
+        public UIUpdater(ListView ProfileListView, ObservableCollection<Profile> profiles, Label totalProfilesLabel, Label totalWorkoutsLabel)
         {
             this._profileListView = ProfileListView;
             this.profiles = profiles;
@@ -24,6 +25,7 @@ namespace GymApplication
         }
         public void Update()
         {
+
             Debug.WriteLine("Updating front-end by listening");
 
             MainThread.BeginInvokeOnMainThread(() =>

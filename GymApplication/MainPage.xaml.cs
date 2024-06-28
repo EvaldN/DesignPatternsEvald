@@ -25,15 +25,10 @@ namespace GymApplication
 
             CsvUpdater csvUpdater = new CsvUpdater(profiles);
             UIUpdater uiUpdater = new UIUpdater(ProfileListView, profiles, TotalProfilesLabel, TotalWorkoutsLabel);
-            Attach(csvUpdater);
-            // Attach(uiUpdater);
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                // Update UI elements here
-                ProfileListView.ItemsSource = null;
-                ProfileListView.ItemsSource = profiles;
-            });
+            Attach(uiUpdater);
             Notify();
+            // Attaching CSV updater later so it does not run for no reason on launch, unlike the UI updater
+            Attach(csvUpdater);
         }
         private void InitializeData()
         {
@@ -389,11 +384,6 @@ namespace GymApplication
 
                 // Assign the selected workout to the selected profile
                 profile.Workouts.Add(workout);
-
-                // Refresh the profiles list, still doing this on launch
-                ProfileListView.ItemsSource = null;
-                ProfileListView.ItemsSource = profiles;
-
             }
         }
         private void Attach(IObserver observer)

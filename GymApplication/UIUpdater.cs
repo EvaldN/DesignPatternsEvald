@@ -30,20 +30,6 @@ namespace GymApplication
             {
                 try
                 {
-                    Debug.WriteLine("Inside InvokeOnMainThreadAsync");
-
-                    if (_profileListView == null)
-                    {
-                        Debug.WriteLine("_profileListView is null");
-                        return;
-                    }
-
-                    if (profiles == null)
-                    {
-                        Debug.WriteLine("profiles is null");
-                        return;
-                    }
-
                     // Clear and update ItemsSource
                     _profileListView.ItemsSource = null;
                     _profileListView.ItemsSource = profiles; // Set new items

@@ -26,13 +26,12 @@ namespace GymApplication
         {
             Debug.WriteLine("Updating front-end by listening");
 
-            Device.InvokeOnMainThreadAsync(async () =>
+            Device.InvokeOnMainThreadAsync(() =>
             {
                 try
                 {
                     Debug.WriteLine("Inside InvokeOnMainThreadAsync");
 
-                    // Ensure UI elements and data are not null before usage
                     if (_profileListView == null)
                     {
                         Debug.WriteLine("_profileListView is null");
@@ -45,27 +44,15 @@ namespace GymApplication
                         return;
                     }
 
-                    // Refresh the profiles list
-                    Debug.WriteLine("Setting ItemsSource to null");
-                    _profileListView.ItemsSource = null;
+                    // Clear and update ItemsSource
+                    _profileListView.ItemsSource = null; // Clear previous items
+                    _profileListView.ItemsSource = profiles; // Set new items
 
-                    Debug.WriteLine("Setting ItemsSource to profiles");
-                    _profileListView.ItemsSource = profiles;
-
-                    // Refresh the totals labels according to the change of the main page's profiles state
+                    // Update other UI elements
                     _totalProfilesLabel.Text = "Total profiles: " + (profiles.Count - 1);
 
-                    int workoutCount = 0;
-                    foreach (Profile profile in profiles)
-                    {
-                        workoutCount += profile.Workouts.Count;
-                    }
+                    int workoutCount = profiles.Sum(profile => profile.Workouts.Count);
                     _totalWorkoutsLabel.Text = "Total workouts: " + workoutCount.ToString();
-                }
-                catch (System.Runtime.InteropServices.COMException comEx)
-                {
-                    Debug.WriteLine("COMException occurred: " + comEx.Message);
-                    Debug.WriteLine("Stack Trace: " + comEx.StackTrace);
                 }
                 catch (Exception ex)
                 {

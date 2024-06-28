@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GymApplication.MainPage">
+             x:Class="GymApplication.MainPage"
+             BackgroundColor="White">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="DeleteButtonStyle" TargetType="Button">
@@ -9,31 +10,33 @@
                 <Style.Triggers>
                     <DataTrigger TargetType="Button" Binding="{Binding Name}" Value="Unassigned">
                         <Setter Property="IsVisible" Value="False" />
+                        <Setter Property="BackgroundColor" Value="DarkBlue"/>
+                        <Setter Property="TextColor" Value="White"/>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
     <StackLayout>
-        <Label Text="Gym Workout Manager" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10"/>
+        <Label Text="Gym Workout Manager" FontSize="Large" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" Margin="0,20,0,10" TextColor="DarkBlue"/>
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-            <Label x:Name="TotalProfilesLabel" Text="Total profiles: " Margin="10,20,10,0"></Label>
-            <Label x:Name="TotalWorkoutsLabel" Text="Total workouts: " Margin="10,20,10,0"></Label>
+            <Label x:Name="TotalProfilesLabel" Text="Total profiles: " Margin="10,20,10,0" TextColor="DarkBlue"></Label>
+            <Label x:Name="TotalWorkoutsLabel" Text="Total workouts: " Margin="10,20,10,0" TextColor="DarkBlue"></Label>
         </StackLayout>
-        <ListView x:Name="ProfileListView">
+        <ListView x:Name="ProfileListView" HorizontalOptions="CenterAndExpand">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout>
-                            <Label Text="{Binding Name}" FontAttributes="Bold"/>
-                            <Label Text="Workouts:"/>
+                        <StackLayout BackgroundColor="DarkBlue" Orientation="Vertical"  Margin="10,20,10,0" HorizontalOptions="CenterAndExpand" WidthRequest="750">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                            <Label Text="Workouts:" TextColor="White"/>
                             <ListView ItemsSource="{Binding Workouts}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <ViewCell>
-                                            <StackLayout Orientation="Horizontal">
+                                            <StackLayout Orientation="Horizontal" Margin="10,10,10,10">
                                                 <Label Text="{Binding Name}" />
-                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}" />
+                                                <Button Text="Inspect" Clicked="OnInspectWorkoutClicked" CommandParameter="{Binding .}" BackgroundColor="White" TextColor="DarkBlue" Margin="0,0,0,10"/>
                                             </StackLayout>
                                         </ViewCell>
                                     </DataTemplate>
@@ -41,15 +44,17 @@
                             </ListView>
                             <Button Text="Delete Profile" Clicked="OnDeleteProfileClicked" 
                                     CommandParameter="{Binding Name}" 
-                                    Style="{StaticResource DeleteButtonStyle}" />
+                                    Style="{StaticResource DeleteButtonStyle}" BackgroundColor="White" TextColor="DarkBlue" Margin="10,10,10,10" WidthRequest="375"/>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button Text="Create Profile" Clicked="OnCreateProfileClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
-        <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
-        <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
-        <Button Text="Delete Workout" Clicked="OnDeleteWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0"/>
+        <StackLayout HorizontalOptions="Center" Orientation="Horizontal" WidthRequest="750">
+            <Button Text="Create Profile" Clicked="OnCreateProfileClicked" HorizontalOptions="CenterAndExpand" Margin="10,20,10,10" BackgroundColor="DarkBlue" TextColor="White"/>
+            <Button Text="Assign Workout" Clicked="OnAssignWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="10,20,10,10" BackgroundColor="DarkBlue" TextColor="White"/>
+            <Button Text="Create Workout" Clicked="OnCreateWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="10,20,10,10" BackgroundColor="DarkBlue" TextColor="White"/>
+            <Button Text="Delete Workout" Clicked="OnDeleteWorkoutClicked" HorizontalOptions="CenterAndExpand" Margin="10,20,10,10" BackgroundColor="DarkBlue" TextColor="White"/>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

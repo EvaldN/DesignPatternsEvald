@@ -26,7 +26,7 @@ namespace GymApplication
         {
             Debug.WriteLine("Updating front-end by listening");
 
-            Device.InvokeOnMainThreadAsync(() =>
+            Device.BeginInvokeOnMainThread(async ()  =>
             {
                 try
                 {
@@ -45,7 +45,7 @@ namespace GymApplication
                     }
 
                     // Clear and update ItemsSource
-                    _profileListView.ItemsSource = null; // Clear previous items
+                    _profileListView.ItemsSource = null;
                     _profileListView.ItemsSource = profiles; // Set new items
 
                     // Update other UI elements

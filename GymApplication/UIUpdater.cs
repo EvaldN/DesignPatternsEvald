@@ -26,11 +26,13 @@ namespace GymApplication
         {
             Debug.WriteLine("Updating front-end by listening");
 
-            MainThread.BeginInvokeOnMainThread(() =>
+            Device.InvokeOnMainThreadAsync(async () =>
             {
                 try
                 {
-                    Debug.WriteLine("Inside BeginInvokeOnMainThread");
+                    Debug.WriteLine("Inside InvokeOnMainThreadAsync");
+
+                    // Ensure UI elements and data are not null before usage
                     if (_profileListView == null)
                     {
                         Debug.WriteLine("_profileListView is null");
@@ -51,17 +53,13 @@ namespace GymApplication
                     _profileListView.ItemsSource = profiles;
 
                     // Refresh the totals labels according to the change of the main page's profiles state
-                    _totalProfilesLabel.Text = string.Empty;
                     _totalProfilesLabel.Text = "Total profiles: " + (profiles.Count - 1);
-
-                    Debug.WriteLine(profiles);
 
                     int workoutCount = 0;
                     foreach (Profile profile in profiles)
                     {
                         workoutCount += profile.Workouts.Count;
                     }
-                    _totalWorkoutsLabel.Text = string.Empty;
                     _totalWorkoutsLabel.Text = "Total workouts: " + workoutCount.ToString();
                 }
                 catch (System.Runtime.InteropServices.COMException comEx)

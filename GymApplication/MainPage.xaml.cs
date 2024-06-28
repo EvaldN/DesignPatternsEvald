@@ -26,7 +26,13 @@ namespace GymApplication
             CsvUpdater csvUpdater = new CsvUpdater(profiles);
             UIUpdater uiUpdater = new UIUpdater(ProfileListView, profiles, TotalProfilesLabel, TotalWorkoutsLabel);
             Attach(csvUpdater);
-            Attach(uiUpdater);
+            // Attach(uiUpdater);
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                // Update UI elements here
+                ProfileListView.ItemsSource = null;
+                ProfileListView.ItemsSource = profiles;
+            });
             Notify();
         }
         private void InitializeData()

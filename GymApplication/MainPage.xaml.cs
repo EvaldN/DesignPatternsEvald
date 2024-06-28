@@ -43,6 +43,15 @@ namespace GymApplication
             string profileName = await DisplayPromptAsync("Create Profile", "Enter profile name:", "Create", "Cancel", "New Profile");
             if (!string.IsNullOrWhiteSpace(profileName))
             {
+                foreach (var profile in profiles)
+                {
+                    if (profile.Name == profileName)
+                    {
+                        // Invalid name input handling
+                        await DisplayAlert("Invalid Input", "Name already exists!", "OK");
+                        return;
+                    }
+                }
                 // Create new profile with the entered name
                 var newProfile = new Profile { Name = profileName };
                 profiles.Add(newProfile);
@@ -130,7 +139,18 @@ namespace GymApplication
             string name = await DisplayPromptAsync("Create Workout", "Enter workout name:");
             if (string.IsNullOrWhiteSpace(name))
                 return; // Do nothing if the name is empty
-
+                foreach(Profile profile in profiles)
+                {
+                    foreach(IWorkout iteratedWorkout in profile.Workouts)
+                    {
+                        if (iteratedWorkout.Name == name)
+                        {
+                            // Taken name handling
+                            await DisplayAlert("Invalid Input", "Workout name already taken!", "OK");
+                            return;
+                    }
+                    }
+                }
             // Enter workout type (can choose from the enums found in WorkoutFactory, pretty scalable)
             var selectedType = await DisplayActionSheet("Select Workout Type", "Cancel", null, Enum.GetNames(typeof(WorkoutType)));
             if (selectedType == "Cancel")

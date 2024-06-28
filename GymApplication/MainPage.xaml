@@ -28,7 +28,7 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout BackgroundColor="DarkBlue" Orientation="Vertical"  Margin="10,20,10,0" HorizontalOptions="CenterAndExpand" WidthRequest="750">
-                            <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White"/>
+                            <Label Text="{Binding Name}" FontAttributes="Bold" HorizontalOptions="Center" TextColor="White" Margin="10,10,10,0"/>
                             <Label Text="Workouts:" TextColor="White"/>
                             <ListView ItemsSource="{Binding Workouts}">
                                 <ListView.ItemTemplate>
